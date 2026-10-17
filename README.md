@@ -1,58 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Vehicle API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Partners: Espiritu, Ferdinand,   Ruar, Avie Clier**
+**Section: IT2E**
+**Resource:** Vehicle (make, model, color, year, price)
 
-## About Laravel
+## Setup
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Clone the project and enter the folder:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+   git clone [your-repo-url]
+   cd vehicle-api
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. Install dependencies:
 
-## Learning Laravel
+   composer install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. Create the environment file and app key:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   copy .env.example .env
+   php artisan key:generate
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+4. Create the SQLite database file:
 
-## Agentic Development
+   type nul > database\database.sqlite
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+5. Create the tables:
 
-```bash
-composer require laravel/boost --dev
+   php artisan migrate
 
-php artisan boost:install
-```
+6. Start the server:
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+   php artisan serve
 
-## Contributing
+   The API runs at `http://127.0.0.1:8000/api`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Routes
 
-## Code of Conduct
+| Verb | Path | What it does | Token needed? |
+|------|------|--------------|---------------|
+| POST | /api/register | Create an account and return a token | No |
+| POST | /api/login | Log in and return a token | No |
+| POST | /api/logout | Revoke the current token | Yes |
+| GET | /api/me | Show the logged-in user | Yes |
+| GET | /api/vehicles | List vehicles (filter with `?make=` `?color=` `?year=`) | Yes |
+| POST | /api/vehicles | Create a vehicle | Yes |
+| GET | /api/vehicles/{vehicle} | Show one vehicle | Yes |
+| PUT | /api/vehicles/{vehicle} | Update a vehicle | Yes |
+| DELETE | /api/vehicles/{vehicle} | Delete a vehicle | Yes |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Screenshots
 
-## Security Vulnerabilities
+### 1. Register (201)
+![Register](1ScreenShots/1%20Register.png)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Login (200)
+![Login](1ScreenShots/2%20Login.png)
 
-## License
+### 3. List without token (401)
+![List without token](1ScreenShots/3%20List%20no%20Token.png)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4. List with token (200)
+![List with token](1ScreenShots/4%20List%20with%20Token.png)
+
+### 5. Create vehicle (201)
+![Create vehicle](1ScreenShots/5%20Create%20Vehicle.png)
+
+### 6. Create with missing field (422)
+![Create invalid](1ScreenShots/6%20Missing%20Field.png)
+
+### 7. Show one vehicle (200)
+![Show one](1ScreenShots/7%20Show%20One.png)
+
+### 8. Show missing vehicle (404)
+![Show missing](1ScreenShots/8%20Show%20Missing.png)
+
+### 9. Update vehicle (200)
+![Update](1ScreenShots/9%20Update.png)
+
+### 10. Delete vehicle (204)
+![Delete](1ScreenShots/10%20Delete.png)
+
+## Why does DELETE return 204 and not 200?
+
+The DELETE request will ask the server to remove the vehicle. Once it's removed, there is nothing left to send back, so the server replies with 204, which means No Content. A 200 response normally carries a body, like the vehicls data, but the deleted vehicle no longer exhist. The 204 status alone tells the client that the request worked and the emty body keeps the response short and clear.
