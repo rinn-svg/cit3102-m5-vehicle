@@ -1,0 +1,28 @@
+info:
+  name: Create Vehicle
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://127.0.0.1:8000/api/vehicles
+  body:
+    type: json
+    data: |-
+      {
+        "make": "Honda",
+        "model": "Civic",
+        "color": "Red",
+        "year": 2022,
+        "price": 750000
+      }
+  auth:
+    type: bearer
+    token: 2|sbe94Hon8Dxw0VsCvkCkUs7dBEbzQZqUR0ZnPshX992592e1
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
