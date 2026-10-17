@@ -8,7 +8,7 @@
 
 1. Clone the project and enter the folder:
 
-   git clone [your-repo-url]
+   git clone https://github.com/rinn-svg/cit3102-m5-vehicle.git
    cd vehicle-api
 
 2. Install dependencies:
@@ -82,4 +82,10 @@
 
 ## Why does DELETE return 204 and not 200?
 
-The DELETE request will ask the server to remove the vehicle. Once it's removed, there is nothing left to send back, so the server replies with 204, which means No Content. A 200 response normally carries a body, like the vehicls data, but the deleted vehicle no longer exhist. The 204 status alone tells the client that the request worked and the emty body keeps the response short and clear.
+When a client sends a DELETE request, it is asking the server to remove a specific vehicle from the system. For example, DELETE /vehicles/5 tells the server to delete the vehicle with ID 5. The server finds the record, deletes it, and then has to tell the client what happened.
+
+Once the vehicle is removed, there is nothing meaningful left to send back. The record no longer exists, so returning its data would be confusing, and returning an empty JSON object would add noise without telling the client anything useful.
+
+For this reason, the server replies with a 204 status code, which means “No Content.” This code tells the client that the request was successful and that the server is intentionally sending an empty body. A 200 OK response, by contrast, normally carries a body, such as the vehicle’s data after it has been created or updated. A client receiving a 200 might expect something to parse, and an empty body could cause an error.
+
+The 204 status alone is enough to confirm that the deletion worked. The client only needs to check that the status code is in the 2xx range and can move on, for example by removing the vehicle from the list shown on screen. The empty body also keeps the response small, fast and unambiguous, which is why 204 is the standard choice for successful DELETE requests in REST APIs.
